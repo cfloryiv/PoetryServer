@@ -1,0 +1,22 @@
+﻿@page "/initdb"
+@using PS.BR
+
+<h3>InitDB</h3>
+<p>Loading...</p>
+
+@code {
+    [Inject]
+    public NavigationManager navigationManager { get; set; }
+
+    public Poems poems { get; set; }
+
+    protected override void OnInitialized()
+    {
+        poems = new Poems
+        {
+            Path = @"C:\Users\cflor\OneDrive\Poems"
+        };
+        poems.ImportText();
+        navigationManager.NavigateTo("/");
+    }
+}

@@ -1,0 +1,47 @@
+﻿@page "/slideshow"
+@using PS.BR
+
+<section>
+    <button class="btn btn-primary" @onclick="() => ReloadPage()">Next Page</button>
+    <div class="content">
+
+        @foreach (var poem in poems.GetList().Skip(SkipCount).Take(2))
+        {
+            <div class="poem">
+                <h1>@poem.Title</h1>
+                @foreach (var line in poem.Contents)
+                {
+                    if (line == poem.Title) continue;
+                    <p>@line</p>
+                }
+            </div>
+        }
+    </div>
+
+</section>
+
+@code {
+    [Inject]
+    public NavigationManager navigationManager { get; set; }
+
+    public Poems poems { get; set; }
+    public int SkipCount { get; set; } = 0;
+
+    protected override void OnInitialized()
+    {
+        poems = new Poems
+        {
+            Path = @"C:\Users\cflor\OneDrive\Poems"
+        };
+        poems.ImportText();
+    }
+    public void ReloadPage()
+    {
+        SkipCount += 2;
+        if (SkipCount>=poems.GetList().Count)
+        {
+            SkipCount = 0;
+        }
+        StateHasChanged();
+    }
+}
